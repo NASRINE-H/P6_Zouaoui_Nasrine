@@ -1,8 +1,10 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 
 const mongoose = require('mongoose');
 
-const sauce = require('./models/sauce');
+const stuffRoutes = require('./routes/stuff');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -21,26 +23,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/api/stuff', (req, res, next) => {
-  delete req.body._id;
-  const sauce = new Sauce({
-    ...req.body
-  });
-  sauce.save()
-    .then(() => res.status(201).json({ message: 'sauce enregistré !'}))
-    .catch(error => res.status(400).json({ error }));
-});
+app.use(bodyParser.json());
 
-app.get('/api/stuff/:id', (req, res, next) => {
-  sauce.findOne({ _id: req.params.id })
-    .then(sauce => res.status(200).json(sauce))
-    .catch(error => res.status(404).json({ error }));
-});
+app.use('/api/stuff', stuffRoutes);
 
-app.use('/api/stuff', (req, res, next) => {
-  Sauce.find()
-    .then(sauce => res.status(200).json(sauces))
-    .catch(error => res.status(400).json({ error }));
-});
+app.use('/api/auth', userRoutes);
 
 module.exports = app;

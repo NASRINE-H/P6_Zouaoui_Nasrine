@@ -4,8 +4,11 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.3",
-    "mongoose": "^6.2.7"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.7",
+    "mongoose-unique-validator": "^3.0.0"
   },
   "devDependencies": {},
   "scripts": {
