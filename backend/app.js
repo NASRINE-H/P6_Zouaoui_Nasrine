@@ -1,6 +1,7 @@
 // Pour gérer la demande POST provenant de l'application front-end, nous devrons être capables d'extraire l'objet JSON de la demande, on importe donc body-parser
-const bodyParser = require('body-parser');
+
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const mongoose = require('mongoose');
 const path = require('path');
