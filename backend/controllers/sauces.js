@@ -37,7 +37,6 @@ exports.createSauce = (req, res, next) => {
     }
   );
 }; 
-
 // Permet de récupérer une seule sauce, identifiée par son id depuis la base MongoDB
  // On utilise la méthode findOne et on lui passe l'objet de comparaison, on veut que l'id de la sauce soit le même que le paramètre de requête
 exports.getOneSauce = (req, res, next) => {
@@ -55,8 +54,7 @@ exports.getOneSauce = (req, res, next) => {
     }
   );
 };
-
-
+// Permet de modifier une sauce
 exports.modifySauce = (req, res, next) => {
   let sauceObject = {};
   req.file ? (
@@ -97,32 +95,8 @@ exports.modifySauce = (req, res, next) => {
       error
     }))
 }
-// Permet de modifier une sauce
-/*exports.modifySauce = (req, res, next) => {
-  const sauceObject = req.file ? {
-    ...JSON.parse(req.body.sauce),
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-
-  } : {
-    ...req.body
-  };
-  Sauce.updateOne({
-      _id: req.params.id
-    }, {
-      ...sauceObject,
-      _id: req.params.id
-    })
-    .then(() => res.status(200).json({
-      message: 'sauce modifié !'
-    }))
-    .catch(error => res.status(400).json({
-      error
-    }));
-};*/
 
 // Permet de supprimer la sauce
-
-
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
@@ -135,7 +109,6 @@ exports.deleteSauce = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
-
 
 // Permet de récuperer toutes les sauces de la base MongoDB
  // On utilise la méthode find pour obtenir la liste complète des sauces trouvées dans la base, l'array de toutes les sauves de la base de données
@@ -152,11 +125,7 @@ exports.getAllSauces = (req, res, next) => {
     }
   );
 };
-
-
-
 // Permet de "liker"ou "dislaker" une sauce
-
 exports.likeDislike = (req, res, next) => {
   // Pour la route READ = Ajout/suppression d'un like / dislike à une sauce
   // Like présent dans le body

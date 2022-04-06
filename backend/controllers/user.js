@@ -7,9 +7,7 @@ const User = require('../models/user');
 
 // Middleware pour crée un nouvel utilisateur
 
-// On sauvegarde un nouvel utilisateur et crypte son mot de passe avec un hash généré par bcrypt
-// On appelle la méthode hash de bcrypt et on lui passe le mdp de l'utilisateur, le salte (10) ce sera le nombre de tours qu'on fait faire à l'algorithme
- // On récupère le hash de mdp qu'on va enregister en tant que nouvel utilisateur dans la BBD mongoDB
+
 exports.signup = (req, res, next) => {
   
     bcrypt.hash(req.body.password, 10)
@@ -56,11 +54,9 @@ exports.signup = (req, res, next) => {
                 { userId: user._id 
                  // Encodage de l'userdID nécéssaire dans le cas où une requête transmettrait un userId (ex: modification d'une sauce)
                 },
-                'RANDOM_TOKEN_SECRET',// Clé d'encodage du token qui peut être rendue plus complexe en production
-                // Argument de configuration avec une expiration au bout de 24h
+                'RANDOM_TOKEN_SECRET',
                 { expiresIn: '24h' }
-              ) // On encode le userID pour la création de nouveaux objets, et cela permet d'appliquer le bon userID
-              // aux objets et ne pas modifier les objets des autres
+              ) 
             });
           })
           .catch(error => res.status(500).json({ error }));
