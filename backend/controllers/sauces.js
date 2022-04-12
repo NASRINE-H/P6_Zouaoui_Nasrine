@@ -54,12 +54,39 @@ exports.getOneSauce = (req, res, next) => {
         }
     );
 };
+
 // Permet de modifier une sauce
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = {};
-    req.file ? (
+    const sauceObject = req.file ? {
+        ...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : {
+        ...req.body
+    };
+    Sauce.updateOne({
+            _id: req.params.id
+        }, {
+            ...sauceObject,
+            _id: req.params.id
+        })
+        .then(() => res.status(200).json({
+            message: 'sauce modifié !'
+        }))
+        .catch(error => res.status(400).json({
+            error
+        }));
+};
 
-        Sauce.findOne({
+
+
+
+
+
+
+// Permet de modifier une sauce
+/*exports.modifySauce = (req, res, next) => {
+    const sauceObject = {};
+    req.file ? ( Sauce.findOne({
             _id: req.params.id
         }).then((sauce) => {
 
@@ -92,7 +119,7 @@ exports.modifySauce = (req, res, next) => {
         .catch((error) => res.status(400).json({
             error
         }))
-}
+}*/
 
 // Permet de supprimer la sauce
 exports.deleteSauce = (req, res, next) => {
