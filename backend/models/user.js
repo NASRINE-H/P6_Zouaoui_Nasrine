@@ -5,10 +5,9 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 
 const userSchema = mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: [true, "Veuillez faire un mot de passe"] }
+    email: { type: String, required: true, unique: true }, // unique pour que ce soit impossible s'inscrir plusieurs fois  avec la meme ,adresse email.
+    password: { type: String, required: true }
 });
-// Plugin pour garantir un email unique
 
 userSchema.plugin(uniqueValidator);
 

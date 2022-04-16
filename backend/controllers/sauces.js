@@ -1,3 +1,8 @@
+//La méthodeexpress.Router() nous permet de créer des routeurs séparés pour chaque route principale
+// de notre application – nous y enregistrez ensuite les routes individuelles.
+
+
+
 //la logique métier (les fonctions pour les appliquer sur nos routes sauce.js)
 // Récupération du modèle 'sauce'
 const Sauce = require('../models/sauce');
@@ -5,7 +10,7 @@ const Sauce = require('../models/sauce');
 const fs = require('fs');
 const sauce = require('../models/sauce');
 
-// Permet de créer une nouvelle sauce
+//  créer une nouvelle sauce
 
 exports.createSauce = (req, res, next) => {
 
@@ -39,6 +44,7 @@ exports.createSauce = (req, res, next) => {
     );
 };
 
+//récuperer une sauce 
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({
         _id: req.params.id
@@ -79,49 +85,7 @@ exports.modifySauce = (req, res, next) => {
 
 
 
-
-
-
-
-// Permet de modifier une sauce
-/*exports.modifySauce = (req, res, next) => {
-    const sauceObject = {};
-    req.file ? ( Sauce.findOne({
-            _id: req.params.id
-        }).then((sauce) => {
-
-            const filename = sauce.imageUrl.split('/images/')[1]
-            fs.unlinkSync(`images/${filename}`)
-        }),
-        sauceObject = {
-
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename
-        }`,
-        }
-    ) : (
-        sauceObject = {
-            ...req.body
-        }
-    )
-    Sauce.updateOne(
-
-            {
-                _id: req.params.id
-            }, {
-                ...sauceObject,
-                _id: req.params.id
-            }
-        )
-        .then(() => res.status(200).json({
-            message: 'Sauce modifiée !'
-        }))
-        .catch((error) => res.status(400).json({
-            error
-        }))
-}*/
-
-// Permet de supprimer la sauce
+// supprimer la sauce
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
@@ -135,7 +99,7 @@ exports.deleteSauce = (req, res, next) => {
         .catch(error => res.status(500).json({ error }));
 };
 
-// Permet de récuperer toutes les sauces de la base MongoDB
+//  récuperer toutes les sauces de la base MongoDB
 
 exports.getAllSauces = (req, res, next) => {
     Sauce.find().then(
@@ -151,6 +115,7 @@ exports.getAllSauces = (req, res, next) => {
     );
 };
 
+//faire like ou deislike 
 exports.likeDislikeSauce = (req, res, next) => {
     const like = req.body.like
     const sauceId = req.params.id

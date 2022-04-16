@@ -1,7 +1,7 @@
 //on trouve la logique de routing (les routes pour les sauces )
-// Ajout de plugin externe nécessaire pour utiliser le router d'Express
+
 const express = require('express');
-// Appel du routeur avec la méthode mise à disposition par Express
+
 const router = express.Router();
 // Ajout des middleweares
 

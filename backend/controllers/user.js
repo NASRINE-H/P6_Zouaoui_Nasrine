@@ -3,34 +3,28 @@
 
 //  utilise l'algorithme bcrypt pour hasher le mot de passe 
 const bcrypt = require('bcrypt');
-// utilise le package jsonwebtoken pour attribuer un token à un utilisateur au moment ou il se connecte
+
+//Les JSON web tokens sont des tokens encodés qui peuvent être utilisés pour l'autorisation.
+
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-// Middleware pour  un nouvel utilisateur
-
-
+// Middleware pour  un nouveau utilisateur
 exports.signup = (req, res, next) => {
 
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-
             const user = new User({
-
                 email: req.body.email,
-
                 password: hash
             });
-
             user.save()
                 .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                 .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
 };
-
-
 
 exports.login = (req, res, next) => {
 
