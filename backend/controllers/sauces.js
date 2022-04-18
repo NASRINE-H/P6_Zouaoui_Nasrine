@@ -115,83 +115,6 @@ exports.getAllSauces = (req, res, next) => {
     );
 };
 
-//faire like ou deislike 
-/*exports.likeDislikeSauce = (req, res, next) => {
-    const like = req.body.like
-    const sauceId = req.params.id
-    const userId = req.body.userId
-    switch (like) {
-        case (1):
-            // on teste le cas où on a reçu un like =1
-            
-            Sauce.updateOne({ _id: sauceId }, {
-                    $inc: { likes: +1 },
-                    $push: { usersLiked: userId },
-                })
-                .then(() => res.status(200).json({
-                    message: "sauce like +1"
-                }))
-                .catch((error) => res.status(400).json({
-                    error
-                }))
-            break;
-
-        case (-1):
-            // on teste le cas où on a reçu un like =-1 (dislike)
-            Sauce.updateOne({ _id: sauceId }, {
-                    $inc: { dislikes: 1 },
-                    $push: { usersDisliked: userId },
-                })
-                .then(() => res.status(200).json({
-                    message: "sauce dislike +1"
-                }))
-                .catch((error) => res.status(400).json({
-                    error
-                }))
-            break;
-
-        case (0):
-            // on teste le cas où on a reçu un like =0 (like/dislike supprimé)
-            // on cherche le userId dans les liste usersLiked / usersDisliked
-            Sauce.findOne({ _id: sauceId })
-                .then(sauce => {
-                    // on cherche le userId dans les liste usersLiked 
-                    if (sauce.usersLiked.includes(userId)) {
-                        Sauce.updateOne({ _id: sauceId }, {
-                                $inc: { likes: -1 }, // décrémenter compteur likes
-                                $pull: { usersLiked: userId }, //supprimer le userID de la liste
-                            })
-                            .then(() => res.status(200).json({
-                                message: 'Like removed!'
-                            }))
-                            .catch((error) => res.status(400).json({
-                                error
-                            }))
-
-                    }
-                    // on cherche le userId dans les liste usersDisliked
-                    else if (sauce.usersDisliked.includes(userId)) {
-                        Sauce.updateOne({ _id: sauceId }, {
-                                $inc: { dislikes: -1 }, // décrémenter compteur dislikes
-                                $pull: { usersDisliked: userId }, //supprimer le userID de la liste
-                            })
-                            .then(() => res.status(200).json({
-                                message: 'dislike removed!'
-                            }))
-                            .catch((error) => res.status(400).json({
-                                error
-                            }))
-                    }
-
-                })
-            break;
-
-    }
-}
-function checkUser(userIdArray, userId) {
-    return userIdArray.find(id => id ===userId);
-}*/
-
 
 //faire like ou deislike 
 exports.likeDislikeSauce = (req, res, next) => {
@@ -209,15 +132,15 @@ exports.likeDislikeSauce = (req, res, next) => {
                     let exsitedUser1 = checkUser(sauce.usersLiked, userId) || checkUser(sauce.usersDisliked, userId);
                     // Premier like de l'utilisateur
                     if (!exsitedUser1) {
-                        console.log("gggggggggggggggggggggg")
-                            //let likes = sauce.likes ? sauce.likes : 0;
+
+                        //let likes = sauce.likes ? sauce.likes : 0;
                         sauce.likes += 1;
                         sauce.usersLiked.push(userId);
 
                     } else {
                         // l'utilisateur a déjà likeé
                         // On veut éviter like multiple
-                        console.log("nesrine")
+
                         throw new Error("On ne peut liker une sauce qu'une seule fois");
                     }
                     break;
