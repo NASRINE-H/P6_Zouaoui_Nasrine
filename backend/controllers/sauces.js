@@ -116,13 +116,14 @@ exports.getAllSauces = (req, res, next) => {
 };
 
 //faire like ou deislike 
-exports.likeDislikeSauce = (req, res, next) => {
+/*exports.likeDislikeSauce = (req, res, next) => {
     const like = req.body.like
     const sauceId = req.params.id
     const userId = req.body.userId
     switch (like) {
         case (1):
             // on teste le cas où on a reçu un like =1
+            
             Sauce.updateOne({ _id: sauceId }, {
                     $inc: { likes: +1 },
                     $push: { usersLiked: userId },
@@ -186,4 +187,91 @@ exports.likeDislikeSauce = (req, res, next) => {
             break;
 
     }
+}
+function checkUser(userIdArray, userId) {
+    return userIdArray.find(id => id ===userId);
+}*/
+
+
+//faire like ou deislike 
+exports.likeDislikeSauce = (req, res, next) => {
+    const like = req.body.like
+    const sauceId = req.params.id
+    const userId = req.body.userId
+
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            //Si like est = 1, le user aime
+            switch (like) {
+                case (1):
+                    // on teste le cas où on a reçu un like =1
+                    // on vérifie si l'utilisateur
+                    let exsitedUser1 = checkUser(sauce.usersLiked, userId) || checkUser(sauce.usersDisliked, userId);
+                    // Premier like de l'utilisateur
+                    if (!exsitedUser1) {
+                        console.log("gggggggggggggggggggggg")
+                            //let likes = sauce.likes ? sauce.likes : 0;
+                        sauce.likes += 1;
+                        sauce.usersLiked.push(userId);
+
+                    } else {
+                        // l'utilisateur a déjà likeé
+                        // On veut éviter like multiple
+                        console.log("nesrine")
+                        throw new Error("On ne peut liker une sauce qu'une seule fois");
+                    }
+                    break;
+                case (-1):
+                    let exsitedUser2 = checkUser(sauce.usersLiked, userId) || checkUser(sauce.usersDisliked, userId);
+                    // Premier dislike de l'utilisateur
+                    if (!exsitedUser2) {
+                        //let dislikes = sauce.dislikes ? sauce.dislikes : 0;
+                        sauce.dislikes += 1;;
+                        sauce.usersDisliked.push(userId);
+                    } else {
+                        // l'utilisateur a déjà likeé
+                        // On veut éviter like multiple
+                        throw new Error("On ne peut disliker une sauce qu'une seule fois");
+                    }
+                    break;
+                case (0):
+                    //on vérifie le userId dans le tableau usersLiked
+                    let userliked = checkUser(sauce.usersLiked, userId);
+                    if (userliked) {
+                        //retire son like
+                        sauce.likes -= 1;
+                        //on retire le userid du tableau usersLiked
+                        sauce.usersLiked = createNewUserIdArray(sauce.usersLiked, userId);
+                    } else {
+                        //on cherche dans le tableau des usersDisliked
+                        let userDisliked = checkUser(sauce.usersDisliked, userId);
+                        if (userDisliked) {
+                            //retire son dislike
+                            sauce.dislikes -= 1;
+                            //on retire le userid du tableau usersLiked
+                            sauce.usersDisliked = createNewUserIdArray(sauce.usersDisliked, userId);
+                        }
+                    }
+                    break;
+            }
+
+
+            //Sauvegarde la sauce modifié dans la base de données mongoDB
+            sauce.save()
+                //retour promise status OK
+                .then(() => res.status(201).json({ message: "choix appliqué" }))
+                //retour erreur requète
+                .catch(error => res.status(400).json({ error }));
+
+        })
+        .catch(error => res.status(500).json({ error: error.message }));
+}
+
+function checkUser(userIdArray, userId) {
+    return userIdArray.find(id => id === userId);
+
+}
+
+function createNewUserIdArray(userIdArray, userId) {
+    return userIdArray.filter(id => id !== userId);
 }

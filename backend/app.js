@@ -15,6 +15,7 @@ mongoose.connect('mongodb+srv://nasrine:nasrine@cluster0.efplu.mongodb.net/myFir
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const app = express();
+//il nous donne accer au corps de la requete
 app.use(express.json());
 
 
@@ -26,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
